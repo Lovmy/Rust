@@ -1,0 +1,16 @@
+[package]
+name = "application"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = { version = "*", features = [ "json" ] }
+regex = { version = "*" }
+sqlx = { version = "*", features = [ "runtime-tokio-native-tls", "sqlite", "postgres" ] }
+r2d2 = { version = "*" }
+r2d2_sqlite = { version = "*" }
+serde = { version = "*", features = [ "derive" ] }
+serde_json = { version = "*" }
+uuid = { version = "*", features = [ "v4", "fast-rng", "macro-diagnostics" ] }
+arc = { version = "*" }
+chrono = { version = "*" }
