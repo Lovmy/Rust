@@ -1,0 +1,18 @@
+{
+	"name": "Application",
+	"description": "Une application de test.",
+	"start_url": "/",
+	"scope": "/",
+	"lang": "fr",
+	"display": "standalone",
+	"version": "0",
+	"background_color": "#FFFFFF",
+	"theme_color": "#0000FF",
+	"icons": [
+	{
+		"src": "Carlo.png",
+		"sizes": "200x200",
+		"type": "image/png"
+	}
+	]
+}

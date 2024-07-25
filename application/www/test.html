@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta http-equiv="Cache-control" content="public"/>
+		<title>Tests unitaires</title>
+		<script type="text/javascript" src="html/0/js/verification.js"></script>
+		<script>
+			function assert_eq( valeur_1, valeur_2 )
+			{
+				if ( valeur_1 != valeur_2 )
+					return( "&nbsp;...&nbsp;<div style=\"display:inline;color: red;\">FAILED</div>" );
+				else
+					return( "&nbsp;...&nbsp;<div style=\"display:inline;color: green;\">ok</div>" );
+			}
+            function log( texte )
+            {
+				document.getElementById( "divLog" ).innerHTML = document.getElementById( "divLog" ).innerHTML + texte + "<br/>";
+            }
+			function charge()
+			{
+				log ( "abcdef"+assert_eq(test_caracteres_autorises( "abcdef", 10 ), true) );
+				log ( "abc_def"+assert_eq(test_caracteres_autorises( "abc_def", 10 ), true) );
+				log ( "abc def"+assert_eq(test_caracteres_autorises( "abc def", 10 ), true) );
+				log ( "abc-def"+assert_eq(test_caracteres_autorises( "abc-def", 10 ), true) );
+				log ( "abc/def"+assert_eq(test_caracteres_autorises( "abc/def", 10 ), true) );
+				log ( "abc\\def"+assert_eq(test_caracteres_autorises( "abc\\def", 10 ), true) );
+				log ( "abc#def"+assert_eq(test_caracteres_autorises( "abc#def", 10 ), false) );
+				log ( "abcdefghijklnm"+assert_eq(test_caracteres_autorises( "abcdefghijklnm", 10 ), false) );
+				log ( "toto@toto.com"+assert_eq(test_email( "toto@toto.com", 20 ), true) );
+				log ( "totoAttoto.com"+assert_eq(test_email( "totoAttoto.com", 20 ), false) );
+				log ( "toto@toto"+assert_eq(test_email( "toto@toto", 20 ), false) );
+				log ( "toto@toto"+assert_eq(test_email( "totototo.com", 20 ), false) );
+				log ( "toto@totocom"+assert_eq(test_email( "toto@totocom", 20 ), false) );
+				log ( "Un mail toto@toto.com dans ce texte mail = zozo@zozocom."+assert_eq(detecter_email( "Un mail toto@toto.com dans ce texte mail = zozo@zozocom." ), true ));
+				log ( "Pas de mail dans ce texte."+assert_eq(detecter_email( "Pas de mail dans ce texte." ), false ) );
+				log ( "Un numéro +33 6 45 78 92 12 dans ce texte"+assert_eq(detecter_numero_telephone( "Un numéro +33 6 45 78 92 12 dans ce texte" ), true ) );
+				log ( "Un numéro 01 23 45 67 89 dans ce texte"+assert_eq(detecter_numero_telephone( "Un numéro 01 23 45 67 89 dans ce texte" ), true ) );
+				log ( "Un numéro 0123456789 dans ce texte"+assert_eq(detecter_numero_telephone( "Un numéro 0123456789 dans ce texte" ), true ) );
+				log ( "Un numéro +33 06 78 54 11 20 dans ce texte."+assert_eq(detecter_numero_telephone( "Un numéro +33 06 78 54 11 20 dans ce texte." ), true ) );
+				log ( "Pas de numéro +33 dans ce texte."+assert_eq(detecter_numero_telephone( "Pas de numéro +33 dans ce texte." ), false ) );
+				log ( "31/12/2023 23:59"+assert_eq(test_date( "31/12/2023 23:59" ), true) );
+				log ( "30/12/2002"+assert_eq(test_date( "30/12/2002" ), true) );
+				log ( "12/01/1998 13:30"+assert_eq(test_date( "12/01/1998 13:30" ), true) );
+				log ( "28/01/2002 22:35:00"+assert_eq(test_date( "28/01/2002 22:35:00" ), true) );
+				log ( "12/31/2023 00:00"+assert_eq(test_date( "12/31/2023 00:00" ), false) );
+				log ( "31/12/23 00:00"+assert_eq(test_date( "31/12/23 00:00" ), false) );
+				log ( "1/12/2023 01:01"+assert_eq(test_date( "1/12/2023 01:01" ), false) );
+				log ( "30/13/2002"+assert_eq(test_date( "30/13/2002" ), false) );
+				log ( "12/01/1998 24:30"+assert_eq(test_date( "12/01/1998 24:30" ), false) );
+				log ( "28/01/2002 22:35:64"+assert_eq(test_date( "28/01/2002 22:35:64" ), false) );
+				log ( "123"+assert_eq(test_nombre( "123" ), true) );
+				log ( "123.45"+assert_eq(test_nombre( "123.45" ), true) );
+				log ( "123,45"+assert_eq(test_nombre( "123,45" ), false) );
+				log ( "123e2"+assert_eq(test_nombre( "123e2" ), false) );
+            }
+		</script>
+	</head>
+	<body style="color: white;background-color:black;font-size: x-large;" onLoad="charge()">
+        <div id="divLog"></div>
+	</body>
+</html>
