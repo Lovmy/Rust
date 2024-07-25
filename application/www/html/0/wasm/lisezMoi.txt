@@ -1,0 +1,1 @@
+Placer ici le fichier web_assembly.wasm généré par le projet du même nom.
