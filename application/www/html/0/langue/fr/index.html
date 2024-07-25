@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta http-equiv="Cache-control" content="public"/>
+		<link rel="stylesheet" href="../../css/style.css" type="text/css">
+		<link rel="stylesheet" href="../../css/popup.css" type="text/css">
+		<link rel="stylesheet" href="../../css/tableau.css" type="text/css">
+		<title>TITRE</title>
+		<script type="text/javascript" src="../../js/ajax.js"></script>
+		<script type="text/javascript" src="../../js/event.js"></script>
+		<script type="text/javascript" src="../../js/langue.js"></script>
+		<script type="text/javascript" src="../../js/popup.js"></script>
+		<script type="text/javascript" src="../../js/tableau.js"></script>
+		<script type="text/javascript" src="../../js/verification.js"></script>
+		<script type="text/javascript" src="../../js/worker/main.js"></script>
+		<script>
+			const formulaire = {};
+			function callBackEvent( donnees )
+			{
+				let objet_json = JSON.parse(donnees);
+				document.getElementById( "divDate" ).innerHTML = objet_json.date;
+			}
+			function charge()
+			{
+				document.getElementById("texte_mail").focus();
+				// document.getElementById("texte_mail").blur();
+
+				const formulaire = {};
+				formulaire.nom = "toto";
+				formulaire.prenom = "zozo";
+				requete_ajax_json( "/api/envoi/utilisateur", "reponse_charge", JSON.stringify(formulaire) );	// JSON vers texte
+			}
+			function reponse_charge( donnees )
+			{
+				let objet_json = JSON.parse(donnees);															// texte vers JSON
+				set_session_id ( objet_json.sessionid );
+				if ( objet_json.etat == 0 )
+				{
+					initialisation_event( '/api/reception/donnees/'+objet_json.sessionid, 'callBackEvent' );
+					document.getElementById( "divUtilisateurs" ).innerHTML = json2tableau_utilisateurs( objet_json.donnees, "Clef|Nom|Action");
+				}
+				else
+					alert ( "Erreur etat = "+objet_json.etat+", erreur = "+objet_json.erreur );
+			}
+			function connexion()
+			{
+				document.getElementById("divNav").style.visibility="visible";
+				boite_dialogue( "Titre", "Contenue", null );
+			}
+			function click_bouton_libelle( libelle )
+			{
+				alert( libelle );
+			}
+			// DEBUT TESTS _________________________________________________________________________________________
+			function Personne( nom )
+			{
+				if (!new.target)							// si vous m'executer sans new
+					return new Personne( nom );				// ...J'ajouterai du new pour vous
+				this.nom = nom;
+				this.getNom = function()
+				{
+					alert( "nom=" + this.nom );
+				};
+			}
+			function test2()
+			{
+				let listePersonne = [];
+				let personne = new Personne( "1111" );
+				listePersonne.push(personne);
+				personne = new Personne( "2222" );
+				listePersonne.push(personne);
+			}
+			function test()
+			{
+				const obj = { "nom": "John" };
+				requete_ajax_json( "/php/index.php", "reponse_test", JSON.stringify(obj) );
+			}
+			function reponse_test( json )
+			{
+				let objetJSON = JSON.parse(json);
+				let i;
+				for ( i = 0; i < objetJSON.length; i++ )
+				{
+					alert ( i+" = "+objetJSON[i].nom );
+				}
+			}
+		</script>
+	</head>
+	<body onLoad="charge()">
+		<header id="divHaut" class="divHaut">
+			&nbsp;
+		</header>
+		<nav id="divNav" class="divNav">
+			Menu
+			<a href="#divNav" class="ouvrir">&rsaquo;</a>
+			<a href="#divNav_clos" class="fermer">&lsaquo;</a>
+		</nav>
+		<article id="divGaucheHaut" class="divGaucheHaut">
+			<div id="enteteGaucheHaut" class="enteteDiv">Inscription</div>
+			<hr/>
+			<div id="divUtilisateurs"></div>
+			<div id="divformulaire">
+				<input type="checkbox">Une case &#224; cocher</input>
+				<br/><br/>
+				<input type="radio" name="choix" value="1">Un choix</input>
+				<input type="radio" name="choix" value="2">Un choix</input>
+				<br/><br/>
+				<select class="selection">
+					<option value="">--Please choose an option--</option>
+					<option value="dog">Dog</option>
+					<option value="cat">Cat</option>
+					<option value="hamster">Hamster</option>
+					<option value="parrot">Parrot</option>
+					<option value="spider">Spider</option>
+					<option value="goldfish">Goldfish</option>
+				</select>
+			</div>
+		</article>
+		<article id="divDroitBas" class="divDroitBas">
+			<div id="enteteDroitBas" class="enteteDiv">Connexion</div>
+			<div id="divConnexion" class="divConnexion">
+				Adresse mail : <input type="text" id="texte_mail"/>
+				<br/>
+				Mot de passe : <input type="password" id="texte_mdp"/>
+				<br/>
+				<input type="button" value="Connexion" onClick="connexion()"/>
+			</div>
+			<hr/>
+			<div id="divDate"></div>
+			<hr/>
+			<button class="bouton" onclick="sendMessageToWorker()">Hello !</button>
+    		<button class="bouton" onclick="askWorkerRecurringTask()">Recurring task</button>
+			<br/><br/>
+			<div id="divWorker" class="divWorker"></div>
+		</article>
+		<footer id="divBas" class="divBas">
+			&copy;2023
+		</footer>
+		<div id="popup" class="popup"></div>
+	</body>
+</html>
