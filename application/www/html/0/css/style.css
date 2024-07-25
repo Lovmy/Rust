@@ -1,0 +1,330 @@
+@charset "UTF-8";
+
+@import "./couleurs.css";
+
+/* #				-> Trouve l'element par son id			*/
+/* .				-> Trouve l'element par sa classe		*/
+/* Sans rien		-> Trouve l'element par son tag			*/
+
+body {
+	overflow:hidden;
+	font-size: 1.5vw;
+	color: var(--couleur_texte);
+}
+
+hr {
+	border-top: 1px solid var(--couleur_texte);
+}
+
+/* .image {
+	display: inline;
+	visibility: hidden;
+} */
+
+/* header */
+.divHaut {
+	width: 100%;
+	height: 4vh;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-radius: 10px;
+	padding-left: 4px;
+	padding-right: 4px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+/* nav */
+.divNav {
+	height: 88vh;
+	width: 378px;
+	margin: 0px;
+	padding: 10px;
+	color: var(--couleur_entete_texte);
+	background-color: var(--couleur_entete_fond);
+	border: 1px solid var(--couleur_entete_texte);
+	border-top-left-radius: 0px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 0px;
+	opacity: 0.8;
+	position: absolute;
+	left: -400px;
+	-webkit-transition: all .5s ease-in;
+	transition: all .5s ease-in;
+	z-index: 2;
+	visibility: hidden;
+}
+.divNav a.ouvrir,
+.divNav a.fermer {
+	padding: 10px 5px;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-top-left-radius: 0px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 0px;
+	text-decoration: none;
+	position: absolute;
+	right: -31px;
+	top: 30px;
+	width: 20px;
+}
+.divNav:target {
+	left: 0px;
+}
+.divNav a.fermer {
+	display: none;
+}
+.divNav_clos:target #volet {
+	left: -400px;
+}
+.divNav:target a.ouvrir {
+	display: none;
+}
+.divNav:target a.fermer {
+	display: block;
+}
+
+.enteteDiv {
+	width: 100%;
+	color: var(--couleur_entete_texte);
+	background-color: var(--couleur_entete_fond);
+	text-align: center;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+ /* article */
+.divGaucheHaut {
+	width: 50%;
+	height: 90vh;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	float: left;
+	border-radius: 10px;
+	margin: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+ /* article */
+.divDroitBas {
+	width: 49%;
+	height: 90vh;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	text-align: center;
+	float: right;
+	border-radius: 10px;
+	margin: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+/* footer */
+.divBas {
+	width: 100%;
+	height: 4vh;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	float: left;
+	border-radius: 10px;
+	padding-left: 4px;
+	padding-right: 4px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+/* Les elements du formulaire */
+
+.selection {
+	color: var(--couleur_texte);
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-radius: 2px;
+	font-size: 1.4vw;
+}
+
+input[type="button"] {
+	color: var(--couleur_bouton_texte);
+	background-color: var(--couleur_bouton_fond);
+	border: 2px solid var(--couleur_bouton_fond);
+	border-radius: 5%;
+	font-size: 1.6vw;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+input[type="button"]:hover
+{
+	color: var(--couleur_bouton_fond);
+	background-color: var(--couleur_bouton_texte);
+}
+
+input[type="button"]:active
+{
+	color: var(--couleur_bouton_fond);
+	background-color: var(--couleur_bouton_texte);
+}
+
+input[type="checkbox"] {
+	color: var(--couleur_texte);
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-radius: 2px;
+	font-size: 1.4vw;
+	width: 1.5vw;
+	height: 1.5vw;
+}
+
+input[type="checkbox"]:before {
+	background-color:green;
+}
+
+input[type="radio"] {
+	color: var(--couleur_texte);
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	font-size: 1.4vw;
+	width: 1.5vw;
+	height: 1.5vw;
+}
+
+input[type="text"] {
+	color: var(--couleur_texte);
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-radius: 2px;
+	width: 100%;
+	height: 2vw;
+	font-size: 1.4vw;
+}
+
+input[type="password"] {
+	color: var(--couleur_texte);
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	border-radius: 2px;
+	width: 100%;
+	height: 2vw;
+	font-size: 1.4vw;
+}
+
+.bouton {
+	color: var(--couleur_bouton_texte);
+	background-color: var(--couleur_bouton_fond);
+	border: 2px solid var(--couleur_bouton_fond);
+	border-radius: 5%;
+	font-size: 1.6vw;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.lien {
+	color: var(--couleur_bouton_texte);
+	background-color: var(--couleur_bouton_fond);
+	border: 2px solid var(--couleur_bouton_fond);
+	border-radius: 5%;
+	font-size: 1.6vw;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.divWorker {
+	width: 100%;
+	background-color: var(--couleur_fond);
+	border: 1px solid var(--couleur_texte);
+	box-sizing: border-box;
+	z-index: 2;
+}
+
+.divConnexion {
+	border-radius: 2px;
+	display: inline-block;
+}
+
+/* @media screen and (max-width: 1024px) { */
+@media (orientation: portrait) {
+	
+	body {
+		font-size: 4vw;
+	}
+	
+	.selection {
+		font-size: 4vw;
+	}
+	
+	.divGaucheHaut {
+		width: 100%;
+		height: 45vh;
+		float: left;
+		clear: both;
+	}
+
+	.divDroitBas {
+		width: 100%;
+		height: 45vh;
+		float: left;
+		clear: both;
+	}
+	
+	.lien {
+		font-size: 4vw;
+	}
+
+	.bouton {
+		font-size: 4vw;
+	}
+
+	/* Les elements du formulaire */
+	input[type="button"] {
+		font-size: 4vw;
+		background-size: 110px 110px;
+	}
+
+	input[type="button"]:hover
+	{
+		font-size: 4vw;
+	}
+	
+	input[type="checkbox"] {
+		background-color: var(--couleur_fonc);
+		color: var(--couleur_texte);
+		font-size: 4vw;
+		width: 4vw;
+    	height: 4vw;
+	}
+	input[type="radio"] {
+		background-color: var(--couleur_fond);
+		color: var(--couleur_texte);
+		font-size: 4vw;
+		width: 4vw;
+    	height: 4vw;
+	}
+	input[type="text"] {
+		font-size: 4vw;
+		height: 4vw;
+	}
+	input[type="password"] {
+		font-size: 4vw;
+		height: 4vw;
+	}
+	
+	.divNav {
+		height: 89vh;
+		width: 578px;
+		left: -600px;
+	}
+	.divNav_clos:target #volet {
+		left: -600px;
+	}
+}

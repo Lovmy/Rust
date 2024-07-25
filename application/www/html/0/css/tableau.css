@@ -1,0 +1,58 @@
+@charset "UTF-8";
+
+@import "./couleurs.css";
+
+.listeTABLE {
+	border: medium solid #FFFFFF;
+	border-collapse: collapse;
+	width: 90%;
+}
+
+.listeTREntete {
+
+}
+
+.listeTR {
+	
+}
+
+.listeTR:hover td {
+	background-color: yellow;
+}
+
+.listeTH {
+	font-family: monospace;
+	color: var(--couleur_entete_texte);
+	border: thin solid var(--couleur_entete_fond);
+	background-color: var(--couleur_entete_fond);
+	width: 20%;
+	padding: 5px;
+	font-size: 1.5vw;
+}
+
+.listeTD {
+	font-family: sans-serif;
+	border: thin solid var(--couleur_fond);
+	background-color: var(--couleur_fond);
+	width: 20%;
+	padding: 5px;
+	font-size: 1.5vw;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.listeTD:hover {
+
+}
+
+/* @media screen and (max-width: 1024px) { */
+@media (orientation: portrait) {
+
+	.listeTH {
+		font-size: 4vw;
+	}
+
+	.listeTD {
+		font-size: 4vw;
+	}
+}
