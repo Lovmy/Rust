@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+:root {
+ 	--couleur_texte: blue;
+ 	--couleur_fond: white;
+ 	--couleur_bouton_texte: white;
+ 	--couleur_bouton_fond: blue;
+ 	--couleur_entete_texte: white;
+ 	--couleur_entete_fond: blue;
+}
