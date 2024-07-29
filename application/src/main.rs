@@ -36,7 +36,7 @@ use rocket::tokio::time::{ self, Duration };
 use serde::Serialize;
 use chrono::{ DateTime, Utc };
 
-const FICHIER_BDD: &str = relative!( "../fichier.db" );
+const FICHIER_BDD: &str = "fichier.db";
 
 #[derive(Clone)]
 struct Session
