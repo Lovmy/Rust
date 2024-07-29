@@ -10,5 +10,5 @@ echo web_assembly ______________________________________________________________
 cd web_assembly
 cargo clean
 #cargo build --target wasm32-unknown-unknown --release
-#wasm-pack build
+wasm-pack build
 cd ..
