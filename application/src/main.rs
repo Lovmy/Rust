@@ -30,7 +30,7 @@ mod pages;
 use std::collections::HashMap;
 use std::sync::{ Arc, Mutex, RwLock };
 use rocket::State;
-use rocket::fs::{ FileServer, relative };
+use rocket::fs::FileServer;
 use rocket::response::stream::{ EventStream, Event };
 use rocket::tokio::time::{ self, Duration };
 use serde::Serialize;
@@ -165,7 +165,7 @@ fn rocket() -> _
 			rocket::build()
 			.mount( "/api/envoi", routes![envoi] )
 			.mount( "/api/reception", routes![reception] )
-			.mount( "/", FileServer::from( relative!( "www" ) ) )
+			.mount( "/", FileServer::from( "www" ) )
 			.manage( Sessions { liste: Arc::new(RwLock::new(HashMap::new())), pool: bdd_cnx } )
 		}
 		Err(erreur) => 
