@@ -1,4 +1,3 @@
-// use rayon::prelude::*;
 use crate::HashMap;
 
 pub fn test()
