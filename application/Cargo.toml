@@ -14,3 +14,4 @@ serde_json = { version = "*" }
 uuid = { version = "*", features = [ "v4", "fast-rng", "macro-diagnostics" ] }
 arc = { version = "*" }
 chrono = { version = "*" }
+rayon = { version = "*" }

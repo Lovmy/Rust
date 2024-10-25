@@ -26,6 +26,7 @@ extern crate rocket;
 mod verification;
 mod processus;
 mod pages;
+mod parallele;
 
 use std::collections::HashMap;
 use std::sync::{ Arc, Mutex, RwLock };
@@ -161,6 +162,7 @@ fn rocket() -> _
 		Ok(bdd_cnx) => 
 		{
 			processus::test();
+			parallele::test();
 			// La fonction rocket retourne la valeur de retour de :
 			rocket::build()
 			.mount( "/api/envoi", routes![envoi] )

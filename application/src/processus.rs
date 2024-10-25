@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -7,7 +9,7 @@ use std::time::Duration;
 
 pub fn test()
 {
-    let thread_secondaire = thread::spawn( move ||
+    /* let thread_secondaire = thread::spawn( move ||
     {
         for instant in 1..21
         {
@@ -24,19 +26,21 @@ pub fn test()
 
     thread_secondaire.join().unwrap();
     println!( "*** Fin des Threads classiques ! ***" );
+    */
 
     // Acces concurrent a une variable
-    rc_usage();
-    arc_usage();
-    mutex_usage();
+    // rc_usage();
+    // arc_usage();
+    // mutex_usage();
 
     // Methodes de threading
-    channel_usage();
+    // channel_usage();
     channel2_usage();
 }
 
 fn rc_usage()
 {
+    // Reference counting : Pointeur intelligent pouvant etre possede par plusieurs.
     let ma_valeur  : Rc<String> = Rc::new("Paris".to_string());
 
     println!("[RC] longueur de la chaîne : {}", ma_valeur.len());
@@ -72,6 +76,7 @@ fn rc_usage()
 
 fn arc_usage()
 {
+    // Partade de propriete entre thread avec Atomically Reference Counted
     // Vecteur d'entiers.
     let mut vecteur : Vec<i64> = vec![];
     for ii in 0..1000
@@ -109,6 +114,8 @@ fn arc_usage()
         let _ret = thread.join();
     }
 }
+
+// Communication entre thread
 
 fn mutex_usage()
 {
@@ -173,24 +180,50 @@ fn channel2_usage()
             String::from("?")
         ];
 
+        let intervalle = Duration::from_secs(5);
+        thread::sleep(intervalle);
+
         let id = thread::current().id();
-        println!("[CHANNEL2] A - Je suis le thread qui envoie : {:?}.", id);
 
         let intervalle = Duration::from_secs(2);
 
         for mot in vecteur
         {
-            tx.send(mot).unwrap();
+            match tx.send(mot)
+            {
+                Ok(_data) => 
+                {
+                    println!("[CHANNEL2] ENVOI du message par {:?}.", id);
+                }
+                Err(erreur) => 
+                {
+                    println!("[CHANNEL2] Erreur envoi du message [{}].", erreur);
+                }
+            }
             thread::sleep(intervalle); // Deux secondes avant le prochain mot envoyé.
         }
     });
 
     // Thread qui reçoit, par ailleurs thread principal.
     let id = thread::current().id();
-    println!("[CHANNEL2] B - Je suis le thread qui reçoit : {:?}.", id);
+
+    println!("[CHANNEL2] Attente message...");
+    // match rx.recv()  // bloquant !
+    match rx.try_recv() // Non bloquant
+    {
+        Ok(message) => 
+        {
+            println!("[CHANNEL2] Message reçu {}", message);
+        }
+        Err(erreur) => 
+        {
+            println!("[CHANNEL2] Pas de message pour l'instant [{}].", erreur);
+        }
+    }
     
     for mot_recu in rx
     {
-        println!("[CHANNEL2] 😻 Mot reçu par B envoyé par A : {}", mot_recu);
+        println!("[CHANNEL2] RECEPTION de {} par {:?}.", mot_recu, id);
     }
+    println!("[CHANNEL2] 😻 FIN");
 }
