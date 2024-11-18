@@ -68,8 +68,8 @@ impl Default for Session
 struct Sessions
 {
 	liste: Arc<RwLock<HashMap<String, Mutex<Session>>>>,		// Liste de sessions
-	// pool: r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>	// Pool de connexion SQLite
-	pool: sqlx::Pool<sqlx::Postgres>							// Pool de connexion PostgreSQL
+	pool: r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>		// Pool de connexion SQLite
+//	pool: sqlx::Pool<sqlx::Postgres>							// Pool de connexion PostgreSQL
 }
 
 pub fn requete( pool: r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>, contenu: &str ) -> Option<String>
@@ -130,28 +130,28 @@ async fn envoi( session: &State<Sessions>, fonction: &str, session_id: &str, ran
 		{
 			pages::authentification::liste(session_liste.clone());
 			let s: Session = pages::authentification::verification( body, session_liste, session_id );
-			// let resultat = pages::utilisateurs::liste( session.pool.clone() );
+			let resultat = pages::utilisateurs::liste( session.pool.clone() );
 
-			let mut resultat = String::from("[]");
-			let mut rows = sqlx::query("SELECT json_agg(alias)::text as donnees FROM (select clef, nom from utilisateurs) alias").fetch(&session.pool.clone());
-			while let row = rows.try_next().await 
-			{
-				match row
-				{
-					Ok(option_pg_row) => {
-						match option_pg_row
-						{
-							Some(ligne) => 
-							{
-								resultat = ligne.try_get("donnees").unwrap();
-							},
-							None => break
-
-						}
-					},
-					Err(erreur) => println!("[requete] Erreur {}", erreur )
-				}
-			}
+//			let mut resultat = String::from("[]");
+//			let mut rows = sqlx::query("SELECT json_agg(alias)::text as donnees FROM (select clef, nom from utilisateurs) alias").fetch(&session.pool.clone());
+//			while let row = rows.try_next().await 
+//			{
+//				match row
+//				{
+//					Ok(option_pg_row) => {
+//						match option_pg_row
+//						{
+//							Some(ligne) => 
+//							{
+//								resultat = ligne.try_get("donnees").unwrap();
+//							},
+//							None => break
+//
+//						}
+//					},
+//					Err(erreur) => println!("[requete] Erreur {}", erreur )
+//				}
+//			}
 
 			reponse.sessionid = s.session_id;
 			reponse.donnees = serde_json::from_str(resultat.as_str()).unwrap();	// Texte vers JSON
@@ -185,11 +185,11 @@ fn reception(session: &State<Sessions>, session_id: &str) -> EventStream![]
 #[launch]
 async fn rocket() -> _
 {
-	// let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
-    // match r2d2::Pool::builder().build(bdd_connexion)
+//	let bdd_connexion= sqlx::PgPool::connect("postgresql://postgres@localhost:5432/postgres").await;
+//	match bdd_connexion
 
-	let bdd_connexion= sqlx::PgPool::connect("postgresql://postgres@localhost:5432/postgres").await;
-	match bdd_connexion
+	let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
+    match r2d2::Pool::builder().build(bdd_connexion)
 	{
 		Ok(bdd_cnx) => 
 		{
