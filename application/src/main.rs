@@ -182,29 +182,92 @@ fn reception(session: &State<Sessions>, session_id: &str) -> EventStream![]
 	}
 }
 
-#[launch]
-async fn rocket() -> _
-{
+// #[launch]
+//async fn rocket() -> _
+//{
 //	let bdd_connexion= sqlx::PgPool::connect("postgresql://postgres@localhost:5432/postgres").await;
 //	match bdd_connexion
 
-	let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
-    match r2d2::Pool::builder().build(bdd_connexion)
+//	let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
+//	match r2d2::Pool::builder().build(bdd_connexion)
+//	{
+//		Ok(bdd_cnx) => 
+//		{
+//			processus::test();
+//			parallele::test();
+//			// La fonction rocket retourne la valeur de retour de :
+//			rocket::build()
+//			.mount( "/api/envoi", routes![envoi] )
+//			.mount( "/api/reception", routes![reception] )
+//			.mount( "/", FileServer::from( "www" ) )
+//			.manage( Sessions { liste: Arc::new(RwLock::new(HashMap::new())), pool: bdd_cnx } )
+//		}
+//		Err(erreur) => 
+//		{
+//			panic!( "[rocket] Impossible de lancer le serveur : {}", erreur );
+//		}
+//	}
+//}
+
+fn main()
+{
+	let args: Vec<String> = std::env::args().collect();
+	println!( "Arguments : {:?} 0={}", args, &args[0] );
+	let mut toto = 5;
+
+	let mut calcul_racine = Cache::nouveau( |nombre: u32|
 	{
-		Ok(bdd_cnx) => 
+		toto = toto + 1;
+		nombre * nombre + toto
+	});
+
+	// println!( "toto = {}", toto );
+
+	println!( "Resultat ={}", calcul_racine.valeur(3) );
+	println!( "Resultat ={}", calcul_racine.valeur(2) );
+	println!( "Resultat ={}", calcul_racine.valeur(3) );
+
+
+}
+
+// Toutes les fermetures implémentent au moins un des traits suivants : Fn (emprunt), FnMut(emprunte des valeurs de manière mutable) ou FnOnce (consomme)
+struct Cache<T>	// T = La fonction anonyme
+where
+	T: FnMut(u32) -> u32,
+{
+	calcul: T,
+	valeur: HashMap<u32, u32>,
+}
+
+impl<T> Cache<T>
+where
+	T: FnMut(u32) -> u32	// La fermeture a un paramètre de type u32 et renvoie un u32, le trait lié que nous précisons est Fn (u32) -> u32
+{						// On precise que le type générique T est une fermeture en utilisant le trait Fn
+	fn nouveau(calcul: T) -> Cache<T>		// Ici on a une fonction
+	{
+		Cache
 		{
-			processus::test();
-			parallele::test();
-			// La fonction rocket retourne la valeur de retour de :
-			rocket::build()
-			.mount( "/api/envoi", routes![envoi] )
-			.mount( "/api/reception", routes![reception] )
-			.mount( "/", FileServer::from( "www" ) )
-			.manage( Sessions { liste: Arc::new(RwLock::new(HashMap::new())), pool: bdd_cnx } )
+			calcul,
+			valeur: HashMap::new(),
 		}
-		Err(erreur) => 
+	}
+
+	fn valeur(&mut self, arg: u32) -> u32	// self = La structure, presence de self = Methode et non fonction.
+	{
+		match self.valeur.get(&arg)
 		{
-			panic!( "[rocket] Impossible de lancer le serveur : {}", erreur );
+			Some(v) => 
+			{	
+				println!( "*** Trouve en cache" );
+				*v
+			},
+			None =>
+			{
+				println!( "*** Calculé" );
+				let v = (self.calcul)(arg);
+				self.valeur.insert(arg, v);
+				v
+			},
 		}
 	}
 }
