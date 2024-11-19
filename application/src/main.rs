@@ -229,9 +229,17 @@ fn main()
 		println!( "Resultat ={}", calcul_racine.valeur(3) );
 	}
 
-	let v1: Vec<i32> = vec![1, 2, 3];
-    let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
-    assert_eq!(v2, vec![2, 3, 4]);	// Panique si pas équal !
+	let objet: Option<String> = None;	// Some(String::from("hello world"));
+	if let Some(obj) = objet	// Le if objet != NULL :o)
+	{
+		println!( "objet = {}", obj );
+	}
+	else
+	{
+		println!( "objet est null !" );
+	}
+
+
 }
 
 // Toutes les fermetures implémentent au moins un des traits suivants : Fn (emprunt), FnMut(emprunte des valeurs de manière mutable) ou FnOnce (consomme)
