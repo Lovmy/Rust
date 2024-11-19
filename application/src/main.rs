@@ -215,19 +215,23 @@ fn main()
 	println!( "Arguments : {:?} 0={}", args, &args[0] );
 	let mut toto = 5;
 
-	let mut calcul_racine = Cache::nouveau( |nombre: u32|
-	{
-		toto = toto + 1;
-		nombre * nombre + toto
-	});
+	{	
+		let mut calcul_racine = Cache::nouveau( |nombre: u32|
+		{
+			toto = toto + 1;
+			nombre * nombre + toto
+		});
 
-	// println!( "toto = {}", toto );
+		// println!( "toto = {}", toto );
 
-	println!( "Resultat ={}", calcul_racine.valeur(3) );
-	println!( "Resultat ={}", calcul_racine.valeur(2) );
-	println!( "Resultat ={}", calcul_racine.valeur(3) );
+		println!( "Resultat ={}", calcul_racine.valeur(3) );
+		println!( "Resultat ={}", calcul_racine.valeur(2) );
+		println!( "Resultat ={}", calcul_racine.valeur(3) );
+	}
 
-
+	let v1: Vec<i32> = vec![1, 2, 3];
+    let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+    assert_eq!(v2, vec![2, 3, 4]);	// Panique si pas équal !
 }
 
 // Toutes les fermetures implémentent au moins un des traits suivants : Fn (emprunt), FnMut(emprunte des valeurs de manière mutable) ou FnOnce (consomme)
@@ -242,8 +246,8 @@ where
 impl<T> Cache<T>
 where
 	T: FnMut(u32) -> u32	// La fermeture a un paramètre de type u32 et renvoie un u32, le trait lié que nous précisons est Fn (u32) -> u32
-{						// On precise que le type générique T est une fermeture en utilisant le trait Fn
-	fn nouveau(calcul: T) -> Cache<T>		// Ici on a une fonction
+{							// On precise que le type générique T est une fermeture en utilisant le trait Fn
+	fn nouveau(calcul: T) -> Cache<T>
 	{
 		Cache
 		{
@@ -271,3 +275,18 @@ where
 		}
 	}
 }
+
+pub fn rechercher<'a>(recherche: &str, contenu: &'a str) -> Vec<&'a str>
+{
+//	let mut resultats = Vec::new();
+//	for ligne in contenu.lines()
+//	{
+//		if ligne.contains(recherche)
+//		{
+//			resultats.push(ligne);
+//		}
+//	}
+//	resultats
+
+	contenu.lines().filter(|ligne| ligne.contains(recherche)).collect()
+}	
