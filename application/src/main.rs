@@ -34,7 +34,7 @@ mod parallele;
 
 use std::collections::HashMap;
 use std::sync::{ Arc, Mutex, RwLock };
-use rocket::State;
+use rocket::{State};
 use rocket::fs::FileServer;
 use rocket::response::stream::{ EventStream, Event };
 use rocket::tokio::time::{ self, Duration };
@@ -239,7 +239,33 @@ fn main()
 		println!( "objet est null !" );
 	}
 
+	let valeur = rocket::tokio::runtime::Runtime::new().unwrap().block_on(list_fonction_asynchone());
+	println!( "Valeur = {}", valeur );
+	
 
+
+
+
+}
+
+async fn list_fonction_asynchone() -> u32
+{
+	// let resultat1 = fonction_asynchone().await;
+	// let resultat2 = fonction_asynchone().await;
+
+	let tache1 = fonction_asynchone();
+	let tache2 = fonction_asynchone();
+	let (resultat1, resultat2) = rocket::tokio::join!(tache1, tache2);
+
+	resultat1 + resultat2
+}
+
+async fn fonction_asynchone() -> u32
+{
+	println!("Récupération des données...");
+	time::sleep(Duration::from_secs(5)).await; // Simuler un délai réseau
+	println!("Données récupérées !");
+	42
 }
 
 // Toutes les fermetures implémentent au moins un des traits suivants : Fn (emprunt), FnMut(emprunte des valeurs de manière mutable) ou FnOnce (consomme)
