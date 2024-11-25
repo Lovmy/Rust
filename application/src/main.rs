@@ -267,11 +267,15 @@ fn main()
 	processus::test();
 	*/
 
-	let mut toto = 456;
+	// let mut toto = 456;
+	let mut toto: String = "Hello".to_string();
 
-	let mut test = /*move*/ |nombre: u32|	// Si move, alors le toto apres l'appel à test = 456, sinon il est egal à 1456
+	// Si move, alors le toto apres l'appel à test = 456, sinon il est egal à 1456
+	// Avec un String, si move alors la variable n'est plus disponible ensuite !
+	let mut test = /*move*/ |nombre: u32|
 	{
-		toto = toto + 1000;
+		//toto = toto + 1000;
+		toto = "World".to_string();
 		println!("nombre = {}, toto = {}", nombre, toto);
 	};
 
