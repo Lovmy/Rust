@@ -9,24 +9,28 @@ use std::time::Duration;
 
 pub fn test()
 {
-    /* let thread_secondaire = thread::spawn( move ||
+    let mut toto = 123;
+
+    let thread_secondaire = thread::spawn( move ||
     {
         for instant in 1..21
         {
-            println!( "Instant {} depuis le thread secondaire", instant) ;
+            println!( "Instant {} depuis le thread secondaire {}", instant, toto) ;
+            toto = toto + 1;
             thread::sleep( Duration::from_millis(15) );
         }
     });
 
+    toto = toto + 1000;
     for instant in 1..21
     {
-        println!("Instant {} depuis le thread principal", instant );
+        println!("Instant {} depuis le thread principal {}", instant, toto );
+        toto = toto + 1;
         thread::sleep( Duration::from_millis(10) );
     }
 
     thread_secondaire.join().unwrap();
-    println!( "*** Fin des Threads classiques ! ***" );
-    */
+    println!( "*** Fin des Threads classiques ! {} ***", toto );
 
     // Acces concurrent a une variable
     // rc_usage();
@@ -35,7 +39,7 @@ pub fn test()
 
     // Methodes de threading
     // channel_usage();
-    channel2_usage();
+    // channel2_usage();
 }
 
 fn rc_usage()

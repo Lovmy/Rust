@@ -22,7 +22,6 @@
 
 #![allow(unused_imports)]
 #![allow(dead_code)]
-#![allow(irrefutable_let_patterns)]
 
 #[macro_use]
 extern crate rocket;
@@ -34,7 +33,7 @@ mod parallele;
 
 use std::collections::HashMap;
 use std::sync::{ Arc, Mutex, RwLock };
-use rocket::{State};
+use rocket::State;
 use rocket::fs::FileServer;
 use rocket::response::stream::{ EventStream, Event };
 use rocket::tokio::time::{ self, Duration };
@@ -242,9 +241,30 @@ fn main()
 	let valeur = rocket::tokio::runtime::Runtime::new().unwrap().block_on(list_fonction_asynchone());
 	println!( "Valeur = {}", valeur );
 	
+	let age: Result<u8, _> = "34".parse();
+	if let Ok(valeur_age) = age
+	{
+		println!( "Parse ok = {}", valeur_age );
+	}
 
+	let mut pile = Vec::new();
 
+	pile.push(1);
+	pile.push(2);
+	pile.push(3);
 
+	while let Some(donnee_du_haut) = pile.pop()
+	{
+		println!("{}", donnee_du_haut);
+	}
+
+	let v = vec!['a', 'b', 'c'];
+	for (indice, valeur) in v.iter().enumerate()
+	{
+		println!("{} est à l'indice {}", valeur, indice);
+	}
+
+	processus::test();
 
 }
 
