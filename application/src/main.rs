@@ -210,7 +210,7 @@ fn reception(session: &State<Sessions>, session_id: &str) -> EventStream![]
 
 fn main()
 {
-	let args: Vec<String> = std::env::args().collect();
+	/* let args: Vec<String> = std::env::args().collect();
 	println!( "Arguments : {:?} 0={}", args, &args[0] );
 	let mut toto = 5;
 
@@ -265,6 +265,21 @@ fn main()
 	}
 
 	processus::test();
+	*/
+
+	let mut toto = 456;
+
+	let mut test = /*move*/ |nombre: u32|	// Si move, alors le toto apres l'appel à test = 456, sinon il est egal à 1456
+	{
+		toto = toto + 1000;
+		println!("nombre = {}, toto = {}", nombre, toto);
+	};
+
+	test(132);
+
+	println!("toto = {}", toto);
+
+
 
 }
 
