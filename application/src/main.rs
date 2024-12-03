@@ -40,7 +40,7 @@ use rocket::tokio::time::{ self, Duration };
 use serde::Serialize;
 use chrono::{ DateTime, Utc };
 
-use sqlx::Row;
+use sqlx::{Encode, Row};
 use crate::rocket::futures::TryStreamExt;
 
 const FICHIER_BDD: &str = "fichier.db";
@@ -336,32 +336,20 @@ async fn list_fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
 
 async fn fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
 {
-	let mut rows = sqlx::query("SELECT pg_sleep(10);").fetch(&pool.clone());
-	while let row = rows.try_next().await 
+	println!( "FONCTION ASYNCHRONE" );
+	let rows = sqlx::query("SELECT pg_sleep(2) || 'toto' as resultat").map(|row: sqlx::postgres::PgRow| 
 	{
-		match row
-		{
-			Ok(option_pg_row) => 
-			{
-				match option_pg_row
-				{
-					Some(_ligne) => 
-					{
-						println!( "OK" );
-						break;
-					},
-					None => 
-					{
-						println!( "KO" );
-						break;
-					}	
-				}
-			},
-			Err(erreur) => println!("[requete] Erreur {}", erreur )
-		}
-		break;
+		let resultat: String = row.get("resultat");
+		resultat
+	}).fetch_all(&pool).await;
+	println!( "MILIEU FONCTION ASYNCHRONE" );
+	if let Ok(mut resultat) = rows 
+	{
+		println!( "Taille avant {}", resultat.len());
+		println!( "Resultat: {:?}", resultat.pop());
+		println!( "Taille apres {}", resultat.len());
 	}
-	println!( "FIN WHILE" );
+	println!( "FIN FONCTION ASYNCHRONE" );
 	42
 }
 
