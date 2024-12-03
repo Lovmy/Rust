@@ -131,6 +131,8 @@ async fn envoi( session: &State<Sessions>, fonction: &str, session_id: &str, ran
 			let s: Session = pages::authentification::verification( body, session_liste, session_id );
 			let resultat = pages::utilisateurs::liste( session.pool.clone() );
 
+//			SELECT pg_sleep(10);	postgres 5433
+
 //			let mut resultat = String::from("[]");
 //			let mut rows = sqlx::query("SELECT json_agg(alias)::text as donnees FROM (select clef, nom from utilisateurs) alias").fetch(&session.pool.clone());
 //			while let row = rows.try_next().await 
@@ -237,9 +239,6 @@ fn main()
 	{
 		println!( "objet est null !" );
 	}
-
-	let valeur = rocket::tokio::runtime::Runtime::new().unwrap().block_on(list_fonction_asynchone());
-	println!( "Valeur = {}", valeur );
 	
 	let age: Result<u8, _> = "34".parse();
 	if let Ok(valeur_age) = age
@@ -265,7 +264,6 @@ fn main()
 	}
 
 	processus::test();
-	*/
 
 	// let mut toto = 456;
 	let mut toto: String = "Hello".to_string();
@@ -282,30 +280,123 @@ fn main()
 	test(132);
 
 	println!("toto = {}", toto);
+	*/
 
+	// SQLite
+	/* let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
+	match r2d2::Pool::builder().build(bdd_connexion)
+	{
+		Ok(bdd_cnx) => 
+		{
+			let mut date = chrono::Local::now();
+			println!("DEBUT {} SIZE {}", date.format( "%H:%M:%S" ), bdd_cnx.max_size());
+			let valeur = rocket::tokio::runtime::Runtime::new().unwrap().block_on(list_fonction_asynchone(bdd_cnx));
+			date = chrono::Local::now();
+			println!( "FIN {} Valeur = {}", date.format( "%H:%M:%S" ), valeur );
+		}
+		Err(erreur) => 
+		{
+			panic!( "Impossible de se connecter à la base de données : {}", erreur );
+		}
+	} */
 
-
+	// PostgreSQL
+	// let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::PgPool::connect("postgresql://postgres@localhost:5433/postgres"));
+	let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::postgres::PgPoolOptions::new().max_connections(5).connect("postgresql://postgres@localhost:5433/postgres"));
+	match bdd_connexion
+	{
+		Ok(bdd_connexion) => 
+		{
+			let mut date = chrono::Local::now();
+			println!("DEBUT {} SIZE {}", date.format( "%H:%M:%S" ), bdd_connexion.size() );
+			let valeur = rocket::tokio::runtime::Runtime::new().unwrap().block_on(list_fonction_asynchone(bdd_connexion));
+			date = chrono::Local::now();
+			println!( "FIN {} Valeur = {}", date.format( "%H:%M:%S" ), valeur );
+		}
+		Err(erreur) => 
+		{
+			panic!( "Impossible de se connecter à la base de données : {}", erreur );
+		}
+	}
 }
 
-async fn list_fonction_asynchone() -> u32
+async fn list_fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
+// async fn list_fonction_asynchone(pool: r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>) -> u32
 {
-	// let resultat1 = fonction_asynchone().await;
-	// let resultat2 = fonction_asynchone().await;
+	// let resultat1 = fonction_asynchone(pool.clone()).await;
+	// let resultat2 = fonction_asynchone(pool.clone()).await;
 
-	let tache1 = fonction_asynchone();
-	let tache2 = fonction_asynchone();
+	let tache1 = fonction_asynchone(pool.clone());
+	let tache2 = fonction_asynchone(pool.clone());
+	println!( "FIN APPELS" );
 	let (resultat1, resultat2) = rocket::tokio::join!(tache1, tache2);
 
 	resultat1 + resultat2
 }
 
-async fn fonction_asynchone() -> u32
+async fn fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
 {
-	println!("Récupération des données...");
-	time::sleep(Duration::from_secs(5)).await; // Simuler un délai réseau
-	println!("Données récupérées !");
+	let mut rows = sqlx::query("SELECT pg_sleep(10);").fetch(&pool.clone());
+	while let row = rows.try_next().await 
+	{
+		match row
+		{
+			Ok(option_pg_row) => 
+			{
+				match option_pg_row
+				{
+					Some(_ligne) => 
+					{
+						println!( "OK" );
+						break;
+					},
+					None => 
+					{
+						println!( "KO" );
+						break;
+					}	
+				}
+			},
+			Err(erreur) => println!("[requete] Erreur {}", erreur )
+		}
+		break;
+	}
+	println!( "FIN WHILE" );
 	42
 }
+
+/* async fn fonction_asynchone(pool: std::option::Option<r2d2::PooledConnection<r2d2_sqlite::SqliteConnectionManager>>) -> u32
+{
+	println!( "FONCTION ASYNCHRONE" );
+
+	// time::sleep(Duration::from_secs(5)).await; // Simuler un délai réseau
+	
+	let requete = "WITH RECURSIVE r(i) AS ( VALUES(0) UNION ALL SELECT i FROM r LIMIT 10000000 ) SELECT i FROM r WHERE i = 1";
+	match pool
+	{
+		Some(client) => 
+		{
+			println!( "A" );
+			match client.query_row( requete, [], |row| row.get::<usize, String>(0) )
+			{
+				Ok(_donnee) => 
+				{
+					println!( "OK REQUETE" );
+				}
+				Err(erreur) => 
+				{
+					println!( "{}", erreur );
+				}
+			}
+		}
+		None => 
+		{
+			println!( "NONE" );
+		}
+	}
+
+	42
+} */
 
 // Toutes les fermetures implémentent au moins un des traits suivants : Fn (emprunt), FnMut(emprunte des valeurs de manière mutable) ou FnOnce (consomme)
 struct Cache<T>	// T = La fonction anonyme
