@@ -302,7 +302,7 @@ fn main()
 
 	// PostgreSQL
 	// let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::PgPool::connect("postgresql://postgres@localhost:5433/postgres"));
-	let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::postgres::PgPoolOptions::new().max_connections(5).connect("postgresql://postgres@localhost:5433/postgres"));
+	let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::postgres::PgPoolOptions::new().connect("postgresql://postgres@localhost:5433/postgres"));
 	match bdd_connexion
 	{
 		Ok(bdd_connexion) => 
@@ -326,30 +326,19 @@ async fn list_fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
 	// let resultat1 = fonction_asynchone(pool.clone()).await;
 	// let resultat2 = fonction_asynchone(pool.clone()).await;
 
-	let tache1 = fonction_asynchone(pool.clone());
-	let tache2 = fonction_asynchone(pool.clone());
+	println!( "DEBUT APPELS, SIZE {}", pool.size() );
+	let tache1 = fonction_asynchone(pool.acquire().await);
+	let tache2 = fonction_asynchone(pool.acquire().await);
 	println!( "FIN APPELS" );
 	let (resultat1, resultat2) = rocket::tokio::join!(tache1, tache2);
 
 	resultat1 + resultat2
 }
 
-async fn fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
+async fn fonction_asynchone(_pool: Result<sqlx::pool::PoolConnection<sqlx::Postgres>, sqlx::Error>) -> u32
 {
-	println!( "FONCTION ASYNCHRONE" );
-	let rows = sqlx::query("SELECT pg_sleep(2) || 'toto' as resultat").map(|row: sqlx::postgres::PgRow| 
-	{
-		let resultat: String = row.get("resultat");
-		resultat
-	}).fetch_all(&pool).await;
-	println!( "MILIEU FONCTION ASYNCHRONE" );
-	if let Ok(mut resultat) = rows 
-	{
-		println!( "Taille avant {}", resultat.len());
-		println!( "Resultat: {:?}", resultat.pop());
-		println!( "Taille apres {}", resultat.len());
-	}
-	println!( "FIN FONCTION ASYNCHRONE" );
+	//// let toto = sqlx::query_as("SELECT pg_sleep(2) || 'toto' as resultat").fetch_one(&pool).await;
+
 	42
 }
 
