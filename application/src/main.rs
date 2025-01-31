@@ -20,6 +20,8 @@
 // pragma auto_vacuum = incremental;	-- once on first DB create
 // pragma incremental_vacuum;			-- regularily
 
+// TEST PUSH 31 JANVIER
+
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
