@@ -1,4 +1,4 @@
-const VERSION = "0.0.1";
+const VERSION = "0.0.1a";
 const FICHIERS_EN_CACHE = [
 	"main.js",
 	"web_worker.js",
@@ -13,10 +13,10 @@ const FICHIERS_EN_CACHE = [
 	"../../css/popup.css",
 	"../../css/style.css",
 	"../../css/tableau.css",
+	"../../images/192.png",
+	"../../images/512.png",
 	"../../langue/fr/index.html",
 	"../../wasm/web_assembly.wasm",
-	"../../../../images/192.png",
-	"../../../../images/512.png",
 	"../../../../favicon.ico",
 	"../../../../index.html"
 ];
