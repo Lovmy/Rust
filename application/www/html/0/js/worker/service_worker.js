@@ -1,5 +1,5 @@
-const CACHE_NAME = "0";
-const STATIC_CACHE_URLS = [
+const VERSION = "0.0.1";
+const FICHIERS_EN_CACHE = [
 	"main.js",
 	"web_worker.js",
 	"service_worker.js",
@@ -15,31 +15,33 @@ const STATIC_CACHE_URLS = [
 	"../../css/tableau.css",
 	"../../langue/fr/index.html",
 	"../../wasm/web_assembly.wasm",
+	"../../../../images/192.png",
+	"../../../../images/512.png",
 	"../../../../favicon.ico",
-	"../../../../Carlo.png",
 	"../../../../index.html"
 ];
 
 self.addEventListener("install", event => {
-	console.log("Service Worker installing.");
-	event.waitUntil ( caches.open( CACHE_NAME ).then( cache => cache.addAll( STATIC_CACHE_URLS ) ) );
+	console.log( "[install] Service Worker installing.");
+	event.waitUntil ( caches.open( VERSION ).then( cache => cache.addAll( FICHIERS_EN_CACHE ) ) );
 });
 
 self.addEventListener("activate", event => {
-	console.log("Service Worker activating.");
+	console.log("[activate] Service Worker activating.");
 	// Suppression du cache obsolete
 	event.waitUntil ( caches
 		.keys()
-		.then(keys => keys.filter(key => key !== CACHE_NAME))
+		.then(keys => keys.filter(key => key !== VERSION))
 		.then(keys =>
 		Promise.all ( keys.map(key => {
-			console.log(`Deleting cache ${key}`);
+			console.log(`[activate] Deleting cache ${key}`);
 			return caches.delete(key);
 		}))
 	));
 });
 
 self.addEventListener("fetch", event => {
+	console.log("[fetch] ");
 	// Stratégie Cache-First
 	event.respondWith( caches
 		.match( event.request)								// On vérifie si la requête a déjà été mise en cache
@@ -55,5 +57,5 @@ function cache(request, response)
 	{
 		return Promise.resolve(); // do not put in cache network errors
 	}
-	return caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
+	return caches.open(VERSION).then(cache => cache.put(request, response.clone()));
 }

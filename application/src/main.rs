@@ -20,8 +20,6 @@
 // pragma auto_vacuum = incremental;	-- once on first DB create
 // pragma incremental_vacuum;			-- regularily
 
-// TEST PUSH 31 JANVIER
-
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
@@ -185,34 +183,34 @@ fn reception(session: &State<Sessions>, session_id: &str) -> EventStream![]
 	}
 }
 
-// #[launch]
-//async fn rocket() -> _
-//{
+#[launch]
+async fn rocket() -> _
+{
 //	let bdd_connexion= sqlx::PgPool::connect("postgresql://postgres@localhost:5432/postgres").await;
 //	match bdd_connexion
 
-//	let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
-//	match r2d2::Pool::builder().build(bdd_connexion)
-//	{
-//		Ok(bdd_cnx) => 
-//		{
-//			processus::test();
-//			parallele::test();
-//			// La fonction rocket retourne la valeur de retour de :
-//			rocket::build()
-//			.mount( "/api/envoi", routes![envoi] )
-//			.mount( "/api/reception", routes![reception] )
-//			.mount( "/", FileServer::from( "www" ) )
-//			.manage( Sessions { liste: Arc::new(RwLock::new(HashMap::new())), pool: bdd_cnx } )
-//		}
-//		Err(erreur) => 
-//		{
-//			panic!( "[rocket] Impossible de lancer le serveur : {}", erreur );
-//		}
-//	}
-//}
+	let bdd_connexion = r2d2_sqlite::SqliteConnectionManager::file(FICHIER_BDD);
+	match r2d2::Pool::builder().build(bdd_connexion)
+	{
+		Ok(bdd_cnx) => 
+		{
+			processus::test();
+			parallele::test();
+			// La fonction rocket retourne la valeur de retour de :
+			rocket::build()
+			.mount( "/api/envoi", routes![envoi] )
+			.mount( "/api/reception", routes![reception] )
+			.mount( "/", FileServer::from( "www" ) )
+			.manage( Sessions { liste: Arc::new(RwLock::new(HashMap::new())), pool: bdd_cnx } )
+		}
+		Err(erreur) => 
+		{
+			panic!( "[rocket] Impossible de lancer le serveur : {}", erreur );
+		}
+	}
+}
 
-fn main()
+/* fn main()
 {
 	/* let args: Vec<String> = std::env::args().collect();
 	println!( "Arguments : {:?} 0={}", args, &args[0] );
@@ -304,7 +302,7 @@ fn main()
 
 	// PostgreSQL
 	// let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::PgPool::connect("postgresql://postgres@localhost:5433/postgres"));
-	let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::postgres::PgPoolOptions::new().connect("postgresql://postgres@localhost:5433/postgres"));
+	/* let bdd_connexion = rocket::tokio::runtime::Runtime::new().unwrap().block_on(sqlx::postgres::PgPoolOptions::new().connect("postgresql://postgres@localhost:5433/postgres"));
 	match bdd_connexion
 	{
 		Ok(bdd_connexion) => 
@@ -319,8 +317,10 @@ fn main()
 		{
 			panic!( "Impossible de se connecter à la base de données : {}", erreur );
 		}
-	}
-}
+	} */
+
+	hello();
+} */
 
 async fn list_fonction_asynchone(pool: sqlx::Pool<sqlx::Postgres>) -> u32
 // async fn list_fonction_asynchone(pool: r2d2::Pool<r2d2_sqlite::SqliteConnectionManager>) -> u32
@@ -345,7 +345,7 @@ async fn fonction_asynchone(_pool: Result<sqlx::pool::PoolConnection<sqlx::Postg
 }
 
 /* async fn fonction_asynchone(pool: std::option::Option<r2d2::PooledConnection<r2d2_sqlite::SqliteConnectionManager>>) -> u32
-{
+{println!( "{}", erreur );
 	println!( "FONCTION ASYNCHRONE" );
 
 	// time::sleep(Duration::from_secs(5)).await; // Simuler un délai réseau
@@ -432,4 +432,4 @@ pub fn rechercher<'a>(recherche: &str, contenu: &'a str) -> Vec<&'a str>
 //	resultats
 
 	contenu.lines().filter(|ligne| ligne.contains(recherche)).collect()
-}	
+}

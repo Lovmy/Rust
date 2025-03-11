@@ -1,18 +1,25 @@
 {
+	"short_name": "App",
 	"name": "Application",
+	"start_url": "/?source=pwa",
+	"display": "standalone",
+	"icons"	: [
+		{
+			"src"	: "images/512.png",
+			"type"	: "image/png",
+			"sizes"	: "512x512"
+		},
+		{
+			"src"	: "images/192.png",
+			"type"	: "image/png",
+			"sizes"	: "192x192"
+		}
+	],
 	"description": "Une application de test.",
-	"start_url": "/",
+	"orientation": "paysage",
 	"scope": "/",
 	"lang": "fr",
-	"display": "standalone",
 	"version": "0",
 	"background_color": "#FFFFFF",
-	"theme_color": "#0000FF",
-	"icons": [
-	{
-		"src": "Carlo.png",
-		"sizes": "200x200",
-		"type": "image/png"
-	}
-	]
+	"theme_color": "#0000FF"
 }

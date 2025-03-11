@@ -1,0 +1,6 @@
+name: Commentaire
+description: Ecrit un commentaire pour une fonction
+
+---
+
+Commenter le code surligné dans @currentFile.

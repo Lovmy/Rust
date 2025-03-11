@@ -17,15 +17,19 @@ worker.addEventListener("message", function(messageEvent)
 });
 
 // Creation d'un service worker
-if ("serviceWorker" in navigator)
+window.addEventListener( "load", () => 
 {
-	navigator.serviceWorker.register( "../../js/worker/service_worker.js" ).then(serviceWorker => {
-		console.log( "Service Worker enregistre : ", serviceWorker );
-		console.log( "Scode du Service Worker : ", serviceWorker.scope );
-	}).catch(error => {
-		console.error( "Erreur a l'enregistrement du Service Worker: ", error );
-	});
-}
-else
-	console.log( "Service Worker non supporte." );
-
+	if ("serviceWorker" in navigator)
+	{
+		navigator.serviceWorker.register( "../../js/worker/service_worker.js" ).then(serviceWorker =>
+		{
+			console.log( "[load] Service Worker enregistre : ", serviceWorker );
+			console.log( "[load] Scope du Service Worker : ", serviceWorker.scope );
+		}).catch(error =>
+		{
+			console.error( "[load] Erreur a l'enregistrement du Service Worker: ", error );
+		});
+	}
+	else
+		console.log( "[load] Service Worker non supporte." );
+})
