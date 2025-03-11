@@ -5,18 +5,17 @@
 	"display": "standalone",
 	"icons"	: [
 		{
-			"src"	: "images/512.png",
+			"src"	: "icones/512.png",
 			"type"	: "image/png",
 			"sizes"	: "512x512"
 		},
 		{
-			"src"	: "images/192.png",
+			"src"	: "icones/192.png",
 			"type"	: "image/png",
 			"sizes"	: "192x192"
 		}
 	],
 	"description": "Une application de test.",
-	"orientation": "paysage",
 	"scope": "/",
 	"lang": "fr",
 	"version": "0",

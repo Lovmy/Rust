@@ -8,7 +8,6 @@
 		<link rel="stylesheet" href="../../css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="../../css/popup.css" type="text/css"/>
 		<link rel="stylesheet" href="../../css/tableau.css" type="text/css"/>
-		<link rel="manifest" href="../../manifest.json"/>
 		<script type="text/javascript" src="../../js/ajax.js"></script>
 		<script type="text/javascript" src="../../js/event.js"></script>
 		<script type="text/javascript" src="../../js/langue.js"></script>
@@ -103,12 +102,12 @@
 			<hr/>
 			<div id="divUtilisateurs"></div>
 			<div id="divformulaire">
-				<input type="checkbox">Une case &#224; cocher</input>
+				<input id="caseCoche" type="checkbox">Une case &#224; cocher</input>
 				<br/><br/>
 				<input type="radio" name="choix" value="1">Un choix</input>
 				<input type="radio" name="choix" value="2">Un choix</input>
 				<br/><br/>
-				<select class="selection">
+				<select id="selection" class="selection">
 					<option value="">--Please choose an option--</option>
 					<option value="dog">Dog</option>
 					<option value="cat">Cat</option>
