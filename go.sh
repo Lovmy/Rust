@@ -27,4 +27,3 @@ cargo clean
 cargo build --target wasm32-unknown-unknown --release
 #wasm-pack build
 cd ..
-git config pull.rebase true
