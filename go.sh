@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# https://doc.rust-lang.org/nightly/rustc/platform-support.html
+
 # Pour le statique :
 # 	rustup target add x86_64-unknown-linux-musl
 # 	sudo apt-get install -y musl-tools (Ubuntu)
@@ -21,6 +23,21 @@
 #	[target.x86_64-pc-windows-gnu]
 #	linker = "x86_64-w64-mingw32-gcc"
 
+case "$1" in
+	statique)
+		cible=x86_64-unknown-linux-musl
+		;;
+	arm64)
+		cible=aarch64-unknown-linux-gnu
+		;;
+	windows)
+		cible=x86_64-pc-windows-gnu
+		;;
+	*)
+		echo "$0 statique, arm64 ou windows. Si pas de paramètre compilation par défaut pour le système d'exploitation."
+		;;
+esac
+
 echo Mise a jour ____________________________________________________________________________________________________________
 cd ~/.cargo/bin
 ./rustup update
@@ -29,9 +46,21 @@ cargo install wasm-pack
 echo application ____________________________________________________________________________________________________________
 cd ~/workspace/Rust/application
 cargo clean
-OPENSSL_STATIC=1 PKG_CONFIG_ALLOW_CROSS=1 cargo build --release --target x86_64-unknown-linux-musl			# Statique
-# CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc cargo build --target aarch64-unknown-linux-gnu	# NAS
-# cargo build --release --target x86_64-pc-windows-gnu									# Windows
+
+case "$cible" in
+	x86_64-unknown-linux-musl)
+		OPENSSL_STATIC=1 PKG_CONFIG_ALLOW_CROSS=1 cargo build --release --target x86_64-unknown-linux-musl
+		;;
+	aarch64-unknown-linux-gnu)
+		CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc cargo build --release --target aarch64-unknown-linux-gnu
+		;;
+	x86_64-pc-windows-gnu)
+		cargo build --release --target x86_64-pc-windows-gnu
+		;;
+	*)
+		cargo build --release
+		;;
+esac
 cd ..
 
 #echo web_assembly ___________________________________________________________________________________________________________
@@ -40,3 +69,12 @@ cargo clean
 cargo build --target wasm32-unknown-unknown --release
 #wasm-pack build
 cd ..
+
+rustup show
+if [ -n "$cible" ]; then
+	echo "Cible : $1."
+else
+	echo "Cible par défaut."
+fi
+ls -la application/target/$cible/release/
+exit 0
